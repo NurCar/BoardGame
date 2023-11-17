@@ -14,22 +14,20 @@ function updatePlayers() {
   const player1Select = document.getElementById("player1");
   const player2Select = document.getElementById("player2");
 
-  // Oturum açan kullanıcının adını al
-  player1 = getCurrentUsername();
-  player1Select.innerText = player1;
-
   // Kayıtlı kullanıcıları al
   const users = JSON.parse(localStorage.getItem('users')) || {};
 
-  // İkinci oyuncunun seçeneklerini doldur
+  // Tüm kullanıcıları listele
   for (const user in users) {
-    // İlk oyuncu zaten seçili olduğu için ikinci oyuncu, ilk oyuncu olmayan diğer kullanıcılardan seçilebilir
-    if (user !== player1) {
-      const option2 = document.createElement("option");
-      option2.value = user;
-      option2.text = user;
-      player2Select.add(option2);
-    }
+    const option1 = document.createElement("option");
+    option1.value = user;
+    option1.text = user;
+    player1Select.add(option1);
+
+    const option2 = document.createElement("option");
+    option2.value = user;
+    option2.text = user;
+    player2Select.add(option2);
   }
 
   // İkinci oyuncu seçeneğinin değişiklik olayını dinle
@@ -37,12 +35,12 @@ function updatePlayers() {
     player2 = player2Select.value;
     updateStatus();
   });
-}
 
-function getCurrentUsername() {
-  // Burada oturum açan kullanıcının adını almak için uygun bir yöntemi kullanın
-  // Örneğin, localStorage, bir global değişken veya başka bir mekanizma kullanabilirsiniz
-  return localStorage.getItem('username') || "Oyuncu 1";
+  // İlk oyuncu seçeneğinin değişiklik olayını dinle
+  player1Select.addEventListener('change', function () {
+    player1 = player1Select.value;
+    updateStatus();
+  });
 }
 
 function startGame() {
@@ -168,6 +166,7 @@ function startNextRound() {
   } else {
     currentPlayer = "X"; // Her tur başında ilk oyuncuya geri dön
     board = Array(3).fill().map(() => Array(3).fill(null));
+    player2 = document.getElementById("player2").value; // İkinci oyuncuyu seçilen değere göre güncelle
     updateStatus();
     renderBoard();
   }
@@ -194,18 +193,10 @@ function endGame() {
   // Toplam 3 tur oynandığında oyunu bitir
   if (roundCount >= 3) {
     alert(`Toplam 3 tur oynandı. Oyun bitti. Kazanan: ${getDisplayName(currentPlayer)}`);
+    updateMatchHistory();
+    showMatchHistory();
     resetGame();
   }
-}
-
-function updateMatchHistory() {
-  // Match history'yi her iki oyuncunun bilgisine ekle
-  const users = JSON.parse(localStorage.getItem('users')) || {};
-
-  users[player1].matchHistory.push(...matchHistory.filter(winner => winner === "X"));
-  users[player2].matchHistory.push(...matchHistory.filter(winner => winner === "O"));
-
-  localStorage.setItem('users', JSON.stringify(users));
 }
 
 function isBoardFull() {
@@ -229,10 +220,52 @@ function resetGame() {
   startGame(); // Oyunu sıfırla
 }
 
+function goToMatchHistory() {
+  window.location.href = "history.html"; // Match history sayfasına yönlendir
+}
+
 function goBack() {
   window.location.href = "index.html"; // Ana sayfaya yönlendir
 }
 
-function goToMatchHistory() {
-  window.location.href = "history.html"; // Match history sayfasına yönlendir
+function updateMatchHistory() {
+  // Match history'yi her iki oyuncunun bilgisine ekle
+  const users = JSON.parse(localStorage.getItem('users')) || {};
+
+  users[player1].matchHistory.push({
+    opponent: player2,
+    rounds: roundCount,
+    winner: currentPlayer
+  });
+
+  users[player2].matchHistory.push({
+    opponent: player1,
+    rounds: roundCount,
+    winner: (currentPlayer === "X") ? "O" : "X"
+  });
+
+  localStorage.setItem('users', JSON.stringify(users));
+}
+
+function showMatchHistory() {
+  const historyTable = document.getElementById("historyTable");
+  const users = JSON.parse(localStorage.getItem('users')) || {};
+
+  // Önceki içeriği temizle
+  historyTable.getElementsByTagName('tbody')[0].innerHTML = "";
+
+  for (const user in users) {
+    for (const match of users[user].matchHistory) {
+      const row = historyTable.insertRow();
+      const cell1 = row.insertCell(0);
+      const cell2 = row.insertCell(1);
+      const cell3 = row.insertCell(2);
+      const cell4 = row.insertCell(3);
+
+      cell1.innerText = user;
+      cell2.innerText = match.opponent; // Bu satırı güncelledik
+      cell3.innerText = match.rounds;
+      cell4.innerText = match.winner;
+    }
+  }
 }

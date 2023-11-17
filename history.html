@@ -1,19 +1,40 @@
+<!-- history.html -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <title>3 i rad - Historik</title>
+  <link rel="stylesheet" href="styles.css">
+  <title>Game History</title>
 </head>
 
 <body>
-  <div id="app">
-    <h2>Matchhistorik</h2>
-    <ul id="historyList" class="history-list"></ul>
+  <div class="container">
+    <h1>Game History</h1>
+    <table id="historyTable" class="history-table">
+      <thead>
+        <tr>
+          <th>Player 1</th>
+          <th>Player 2</th>
+          <th>Rounds</th>
+          <th>Winner</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Maç geçmişi burada listelenecek -->
+      </tbody>
+    </table>
+    <button onclick="goBack()">Ana Sayfa</button>
   </div>
-  <script src="script.js"></script>
+  <script src="game.js"></script>
+  <script>
+    // Sayfa yüklendiğinde maç geçmişini göster
+    document.addEventListener('DOMContentLoaded', function () {
+      showMatchHistory();
+    });
+  </script>
 </body>
 
 </html>
