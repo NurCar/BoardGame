@@ -50,12 +50,24 @@ function startGame() {
   roundCount = 0;
   matchHistory = [];
 
+  // İlk oyun başlangıcında her iki oyuncuyu da seçili değilse varsayılan bir değer ata
+  const player1Select = document.getElementById("player1");
+  const player2Select = document.getElementById("player2");
+
+  if (!player1) {
+    player1 = player1Select.value;
+  }
+
+  if (!player2) {
+    player2 = player2Select.value;
+  }
+
   updateStatus();
   renderBoard();
 }
 
 function updateStatus() {
-  document.getElementById("status").innerText = `${currentPlayer}'s Turn | Round: ${roundCount + 1}`;
+  document.getElementById("status").innerText = `${getDisplayName(currentPlayer)}'s Turn | Round: ${roundCount + 1}`;
 }
 
 function renderBoard() {
@@ -158,7 +170,7 @@ function startNextRound() {
   // Bir sonraki turu başlat
   roundCount++;
 
-  if (roundCount >= 2) {
+  if (roundCount > 3) {
     // Oyunu bitir
     updateStatus();
     alert("Oyun tamamlandı. Kazanan: " + determineWinner());
