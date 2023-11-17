@@ -1,0 +1,32 @@
+<!-- register.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Register</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Register</h1>
+    <form id="registerForm">
+      <label for="firstName">Ad:</label>
+      <input type="text" id="firstName" name="firstName" required>
+      <label for="lastName">Soyad:</label>
+      <input type="text" id="lastName" name="lastName" required>
+      <label for="registerUsername">Kullanıcı Adı:</label>
+      <input type="text" id="registerUsername" name="registerUsername" required>
+      <label for="registerPassword">Şifre:</label>
+      <input type="password" id="registerPassword" name="registerPassword" required>
+      <button type="button" onclick="registerUser()">Kayıt Ol</button>
+    </form>
+    <a href="index.html">Ana Sayfa</a>
+  </div>
+  <script src="script.js"></script>
+</body>
+
+</html>

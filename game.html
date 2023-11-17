@@ -1,0 +1,33 @@
+<!-- game.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>3 i Rad Oyunu</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1>3 i Rad Oyunu</h1>
+    <div id="players" class="players">
+      <label for="player1">Oyuncu 1:</label>
+      <select id="player1" class="player-select"></select>
+      <label for="player2">Oyuncu 2:</label>
+      <select id="player2" class="player-select"></select>
+    </div>
+    <div id="gameContainer">
+      <p id="status"></p>
+      <div id="board" class="board"></div>
+      <button onclick="playGame()">Oyunu Oyna</button>
+      <button onclick="resetGame()">Yeni Oyun</button>
+      <button onclick="goBack()">Ana Sayfa</button>
+    </div>
+  </div>
+  <script src="game.js"></script>
+</body>
+
+</html>

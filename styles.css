@@ -1,0 +1,102 @@
+body,
+html {
+  height: 100%;
+  margin: 0px;
+  font-family: Arial, sans-serif;
+}
+
+.board-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #333;
+  flex-direction: column;
+  margin-top: 0px;
+  /* Minskar avståndet uppåt */
+  margin-bottom: 0px;
+  /* Tar bort nedre marginal */
+}
+
+.title {
+  font-size: 2em;
+  color: #f9f9f9;
+  background-color: #333;
+  border: 1px solid #333;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(3, 3, 3, 3);
+  text-transform: uppercase;
+  margin-bottom: 0px;
+  /* Tar bort nedre marginal */
+  padding: 2px 4px;
+  /* Minskar padding för att minska avstånd */
+}
+
+.board {
+  background-color: #444;
+  border: 6px solid #222;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(1, 1, 1, 1);
+  width: 340px;
+  height: 340px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-top: 0px;
+  /* Minskar avståndet uppåt */
+}
+
+.cell {
+  position: relative;
+  font-size: 3em;
+  border: 2px solid #555;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  user-select: none;
+  background-color: #333;
+  color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cell span {
+  position: relative;
+  z-index: 1;
+}
+
+.cell.x span {
+  color: #00bb00;
+}
+
+.cell.o span {
+  color: #ff6f61;
+}
+
+.cell:hover {
+  background-color: #555;
+}
+
+.cell:nth-child(3n) {
+  border-right: none;
+}
+
+.cell:nth-child(n+7) {
+  border-bottom: none;
+}
+
+.cell:empty::before {
+  content: '\00a0';
+}
+
+.winner {
+  background-color: #00bb00 !important;
+}
+
+.draw {
+  background-color: #ffd700 !important;
+}
