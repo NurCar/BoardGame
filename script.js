@@ -1,4 +1,5 @@
 let users = {};
+let currentUser;
 
 function saveUsersToJSON() {
   localStorage.setItem('users', JSON.stringify(users));
@@ -12,7 +13,7 @@ function loadUsersFromJSON() {
 }
 
 function loginUser() {
-  const username = document.getElementById('loginUsername').value;
+  const username = document.getElementById('username').value;
   const password = document.getElementById('loginPassword').value;
 
   loadUsersFromJSON(); // JSON dosyasından kullanıcı bilgilerini yükle

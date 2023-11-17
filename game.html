@@ -15,16 +15,17 @@
     <h1>3 i Rad Oyunu</h1>
     <div id="players" class="players">
       <label for="player1">Oyuncu 1:</label>
-      <select id="player1" class="player-select"></select>
+      <span id="player1" class="player-input" readonly></span>
       <label for="player2">Oyuncu 2:</label>
       <select id="player2" class="player-select"></select>
     </div>
     <div id="gameContainer">
       <p id="status"></p>
       <div id="board" class="board"></div>
-      <button onclick="playGame()">Oyunu Oyna</button>
+
       <button onclick="resetGame()">Yeni Oyun</button>
       <button onclick="goBack()">Ana Sayfa</button>
+      <button onclick="goToMatchHistory()">Game History</button>
     </div>
   </div>
   <script src="game.js"></script>

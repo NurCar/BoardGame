@@ -2,8 +2,8 @@ let currentPlayer;
 let board;
 let roundCount;
 let matchHistory;
-
-
+let player1;
+let player2;
 
 document.addEventListener('DOMContentLoaded', function () {
   updatePlayers();
@@ -14,28 +14,40 @@ function updatePlayers() {
   const player1Select = document.getElementById("player1");
   const player2Select = document.getElementById("player2");
 
-  // Oyuncu seçeneklerini doldur
-  player1Select.innerHTML = "";
-  player2Select.innerHTML = "";
+  // Oturum açan kullanıcının adını al
+  player1 = getCurrentUsername();
+  player1Select.innerText = player1;
 
   // Kayıtlı kullanıcıları al
   const users = JSON.parse(localStorage.getItem('users')) || {};
 
+  // İkinci oyuncunun seçeneklerini doldur
   for (const user in users) {
-    const option1 = document.createElement("option");
-    option1.value = user;
-    option1.text = user;
-    player1Select.add(option1);
-
-    const option2 = document.createElement("option");
-    option2.value = user;
-    option2.text = user;
-    player2Select.add(option2);
+    // İlk oyuncu zaten seçili olduğu için ikinci oyuncu, ilk oyuncu olmayan diğer kullanıcılardan seçilebilir
+    if (user !== player1) {
+      const option2 = document.createElement("option");
+      option2.value = user;
+      option2.text = user;
+      player2Select.add(option2);
+    }
   }
+
+  // İkinci oyuncu seçeneğinin değişiklik olayını dinle
+  player2Select.addEventListener('change', function () {
+    player2 = player2Select.value;
+    updateStatus();
+  });
+}
+
+function getCurrentUsername() {
+  // Burada oturum açan kullanıcının adını almak için uygun bir yöntemi kullanın
+  // Örneğin, localStorage, bir global değişken veya başka bir mekanizma kullanabilirsiniz
+  return localStorage.getItem('username') || "Oyuncu 1";
 }
 
 function startGame() {
-  currentPlayer = "Player 1";
+  // İlk oyuncu otomatik olarak seçildi
+  currentPlayer = "X"; // İlk oyuncu X
   board = Array(3).fill().map(() => Array(3).fill(null));
   roundCount = 0;
   matchHistory = [];
@@ -45,7 +57,7 @@ function startGame() {
 }
 
 function updateStatus() {
-  document.getElementById("status").innerText = `Sıra: ${currentPlayer} | Tur: ${roundCount}`;
+  document.getElementById("status").innerText = `${currentPlayer}'s Turn | Round: ${roundCount + 1}`;
 }
 
 function renderBoard() {
@@ -61,7 +73,9 @@ function renderBoard() {
       cell.onclick = () => makeMove(i, j);
 
       if (board[i][j]) {
-        cell.innerText = board[i][j];
+        const symbol = document.createElement("span");
+        symbol.innerText = board[i][j];
+        cell.appendChild(symbol);
       }
 
       boardElement.appendChild(cell);
@@ -72,21 +86,33 @@ function renderBoard() {
 function makeMove(row, col) {
   if (!board[row][col]) {
     board[row][col] = currentPlayer;
-    roundCount++;
 
     if (checkWinner(row, col)) {
       updateStatus();
-      alert(`${currentPlayer} kazandı!`);
-      endGame();
-    } else if (roundCount === 9) {
+      alert(`${getDisplayName(currentPlayer)} wins Round ${roundCount + 1}!`);
+
+      // Oyunu kazanan oyuncuya puan ekle
+      matchHistory.push(currentPlayer);
+      startNextRound();
+    } else if (roundCount >= 3) {
       updateStatus();
-      alert("Berabere!");
+      alert("Game completed. Winner: " + determineWinner());
       endGame();
     } else {
-      currentPlayer = currentPlayer === "Player 1" ? "Player 2" : "Player 1";
+      currentPlayer = (currentPlayer === "X") ? "O" : "X";
       updateStatus();
       renderBoard();
     }
+  } else {
+    // Eğer hücre zaten doluysa uyarı ver
+    alert("This cell is already filled! Please choose another cell.");
+  }
+
+  // Eğer hiç kazanan olmazsa ve board doluysa
+  if (isBoardFull()) {
+    updateStatus();
+    alert("Nobody wins. Round is a draw!");
+    startNextRound();
   }
 }
 
@@ -97,7 +123,6 @@ function checkWinner(row, col) {
       break;
     }
     if (i === 2) {
-      saveMatchHistory();
       return true;
     }
   }
@@ -109,7 +134,6 @@ function checkWinner(row, col) {
         break;
       }
       if (i === 2) {
-        saveMatchHistory();
         return true;
       }
     }
@@ -118,39 +142,87 @@ function checkWinner(row, col) {
   return false;
 }
 
+function determineWinner() {
+  // Oyun sonunda kazanan oyunculara puan ekle
+  const countPlayer1 = matchHistory.filter(winner => winner === "X").length;
+  const countPlayer2 = matchHistory.filter(winner => winner === "O").length;
+
+  if (countPlayer1 > countPlayer2) {
+    return `Oyuncu 1 (${player1}) kazanıyor`;
+  } else if (countPlayer2 > countPlayer1) {
+    return `Oyuncu 2 (${player2}) kazanıyor`;
+  } else {
+    return "Berabere";
+  }
+}
+
+function startNextRound() {
+  // Bir sonraki turu başlat
+  roundCount++;
+
+  if (roundCount >= 2) {
+    // Oyunu bitir
+    updateStatus();
+    alert("Oyun tamamlandı. Kazanan: " + determineWinner());
+    endGame();
+  } else {
+    currentPlayer = "X"; // Her tur başında ilk oyuncuya geri dön
+    board = Array(3).fill().map(() => Array(3).fill(null));
+    updateStatus();
+    renderBoard();
+  }
+}
+
 function endGame() {
-  updateMatchHistory();
-}
+  // Her tur sonunda kazananı kontrol et
+  if (checkWinner()) {
+    updateMatchHistory();
+    alert(`${getDisplayName(currentPlayer)} oyunu kazandı!`);
+  } else if (isBoardFull()) {
+    // Eğer berabere bittiğinde, round sayısını azalt
+    matchHistory.push("Berabere");
+    alert("Oyun berabere bitti!");
+  } else {
+    // Eğer kazanan yoksa bir sonraki turu başlat
+    currentPlayer = (currentPlayer === "X") ? "O" : "X";
+    roundCount++;
 
-function saveMatchHistory() {
-  const winner = currentPlayer;
-  const loser = currentPlayer === "Player 1" ? "Player 2" : "Player 1";
+    updateStatus();
+    renderBoard();
+  }
 
-  matchHistory.push({
-    winner: winner,
-    loser: loser,
-    rounds: roundCount
-  });
-
-  saveMatchHistoryToLocalStorage();
-}
-
-function saveMatchHistoryToLocalStorage() {
-  // Match history'yi localStorage'a kaydet
-  localStorage.setItem('matchHistory', JSON.stringify(matchHistory));
+  // Toplam 3 tur oynandığında oyunu bitir
+  if (roundCount >= 3) {
+    alert(`Toplam 3 tur oynandı. Oyun bitti. Kazanan: ${getDisplayName(currentPlayer)}`);
+    resetGame();
+  }
 }
 
 function updateMatchHistory() {
   // Match history'yi her iki oyuncunun bilgisine ekle
-  const player1 = document.getElementById("player1").value;
-  const player2 = document.getElementById("player2").value;
-
   const users = JSON.parse(localStorage.getItem('users')) || {};
 
-  users[player1].matchHistory.push(...matchHistory);
-  users[player2].matchHistory.push(...matchHistory);
+  users[player1].matchHistory.push(...matchHistory.filter(winner => winner === "X"));
+  users[player2].matchHistory.push(...matchHistory.filter(winner => winner === "O"));
 
   localStorage.setItem('users', JSON.stringify(users));
+}
+
+function isBoardFull() {
+  // Board'un tamamen dolup dolmadığını kontrol et
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      if (!board[i][j]) {
+        return false; // Hücre dolu değilse devam et
+      }
+    }
+  }
+  return true; // Hiç boş hücre kalmadıysa true döndür
+}
+
+function getDisplayName(symbol) {
+  // Oyuncu simgesini kullanıcı adına dönüştür
+  return symbol === "X" ? player1 : player2;
 }
 
 function resetGame() {
@@ -158,5 +230,9 @@ function resetGame() {
 }
 
 function goBack() {
-  window.location.href = "homepage.html";
+  window.location.href = "index.html"; // Ana sayfaya yönlendir
+}
+
+function goToMatchHistory() {
+  window.location.href = "history.html"; // Match history sayfasına yönlendir
 }
