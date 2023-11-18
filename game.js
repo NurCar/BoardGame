@@ -6,6 +6,8 @@ let player1;
 let player2;
 
 document.addEventListener('DOMContentLoaded', function () {
+  loadUsersFromJSON();
+  showMatchHistory(); // Ekle
   updatePlayers();
   startGame();
 });
@@ -17,30 +19,49 @@ function updatePlayers() {
   // Kayıtlı kullanıcıları al
   const users = JSON.parse(localStorage.getItem('users')) || {};
 
-  // Tüm kullanıcıları listele
-  for (const user in users) {
-    const option1 = document.createElement("option");
-    option1.value = user;
-    option1.text = user;
-    player1Select.add(option1);
+  player1Select.innerHTML = "";
 
-    const option2 = document.createElement("option");
-    option2.value = user;
-    option2.text = user;
-    player2Select.add(option2);
+  // player2Select'e null kontrolü ekleyelim
+  if (player2Select) {
+    player2Select.innerHTML = "";
+
+    // Tüm kullanıcıları listele
+    for (const user in users) {
+      const option1 = document.createElement("option");
+      option1.value = user;
+      option1.text = user;
+      player1Select.add(option1);
+
+      const option2 = document.createElement("option");
+      option2.value = user;
+      option2.text = user;
+      player2Select.add(option2);
+    }
+
+    // İkinci oyuncu seçeneğinin değişiklik olayını dinle
+    player2Select.addEventListener('change', function () {
+      player2 = player2Select.value;
+      updateStatus();
+    });
   }
-
-  // İkinci oyuncu seçeneğinin değişiklik olayını dinle
-  player2Select.addEventListener('change', function () {
-    player2 = player2Select.value;
-    updateStatus();
-  });
 
   // İlk oyuncu seçeneğinin değişiklik olayını dinle
   player1Select.addEventListener('change', function () {
     player1 = player1Select.value;
     updateStatus();
   });
+
+  // currentUser kontrolü
+  if (typeof currentUser !== 'undefined' && currentUser !== null) {
+    player1 = currentUser;
+    // player2Select varsa ve değeri null değilse güncelle
+    if (player2Select && player2Select.value !== null) {
+      player2 = player2Select.value;
+    }
+    updateStatus();
+  } else {
+    console.error("currentUser is not defined.");
+  }
 }
 
 function startGame() {
@@ -67,7 +88,13 @@ function startGame() {
 }
 
 function updateStatus() {
-  document.getElementById("status").innerText = `${getDisplayName(currentPlayer)}'s Turn | Round: ${roundCount + 1}`;
+  const statusElement = document.getElementById("status");
+
+  if (statusElement) {
+    statusElement.innerText = `${getDisplayName(currentPlayer)}'s Turn | Round: ${roundCount + 1}`;
+  } else {
+    console.error("Status element not found on the page.");
+  }
 }
 
 function renderBoard() {
@@ -241,43 +268,62 @@ function goBack() {
 }
 
 function updateMatchHistory() {
-  // Match history'yi her iki oyuncunun bilgisine ekle
   const users = JSON.parse(localStorage.getItem('users')) || {};
 
-  users[player1].matchHistory.push({
+  const player1History = {
     opponent: player2,
     rounds: roundCount,
     winner: currentPlayer
-  });
+  };
 
-  users[player2].matchHistory.push({
+  const player2History = {
     opponent: player1,
     rounds: roundCount,
     winner: (currentPlayer === "X") ? "O" : "X"
-  });
+  };
+
+  users[player1].matchHistory.push(player1History);
+  users[player2].matchHistory.push(player2History);
 
   localStorage.setItem('users', JSON.stringify(users));
+  showMatchHistory(); // Güncellendikten sonra geçmişi göster
 }
 
 function showMatchHistory() {
   const historyTable = document.getElementById("historyTable");
+
+  if (!historyTable) {
+    console.error("historyTable not found on the page.");
+    return;
+  }
+
   const users = JSON.parse(localStorage.getItem('users')) || {};
+  historyTable.innerHTML = ""; // Önceki içeriği temizle
 
-  // Önceki içeriği temizle
-  historyTable.getElementsByTagName('tbody')[0].innerHTML = "";
+  for (const playerName in users) {
+    const player = users[playerName];
 
-  for (const user in users) {
-    for (const match of users[user].matchHistory) {
-      const row = historyTable.insertRow();
-      const cell1 = row.insertCell(0);
-      const cell2 = row.insertCell(1);
-      const cell3 = row.insertCell(2);
-      const cell4 = row.insertCell(3);
+    if (player.matchHistory) {
+      for (const match of player.matchHistory) {
+        if (match) {
+          const { opponent, rounds, winner } = match;
 
-      cell1.innerText = user;
-      cell2.innerText = match.opponent; // Bu satırı güncelledik
-      cell3.innerText = match.rounds;
-      cell4.innerText = match.winner;
+          const row = historyTable.insertRow();
+          const cell1 = row.insertCell(0);
+          const cell2 = row.insertCell(1);
+          const cell3 = row.insertCell(2);
+          const cell4 = row.insertCell(3);
+
+          cell1.innerText = playerName;
+          cell2.innerText = opponent;
+          cell3.innerText = rounds;
+          cell4.innerText = (winner) ? `Winner: ${getDisplayName(winner)}` : "Draw";
+        } else {
+          console.error("Match is null for player:", playerName);
+        }
+      }
+    } else {
+      console.error("matchHistory is null for player:", playerName);
     }
   }
 }

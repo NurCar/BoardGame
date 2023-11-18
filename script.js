@@ -9,6 +9,9 @@ function loadUsersFromJSON() {
   const storedUsers = localStorage.getItem('users');
   if (storedUsers) {
     users = JSON.parse(storedUsers);
+    console.log("Loaded users from localStorage:", users);
+  } else {
+    console.log("No users found in localStorage.");
   }
 }
 
@@ -16,18 +19,18 @@ function loginUser() {
   const username = document.getElementById('username').value;
   const password = document.getElementById('loginPassword').value;
 
-  loadUsersFromJSON(); // JSON dosyasından kullanıcı bilgilerini yükle
+  loadUsersFromJSON();
 
   if (users[username]) {
     if (users[username].password === password) {
-      alert("Giriş başarılı!");
+      alert("Login successful!");
       currentUser = username;
       window.location.href = "homepage.html";
     } else {
-      alert("Şifre hatalı!");
+      alert("Incorrect password!");
     }
   } else {
-    alert("Kullanıcı bulunamadı. Lütfen önce kayıt olun.");
+    alert("User not found. Please register first.");
   }
 }
 
@@ -38,7 +41,7 @@ function registerUser() {
   const password = document.getElementById('registerPassword').value;
 
   if (users[username]) {
-    alert("Bu kullanıcı adı zaten alınmış!");
+    alert("This username is already taken!");
   } else {
     users[username] = {
       firstName: firstName,
@@ -47,9 +50,9 @@ function registerUser() {
       matchHistory: []
     };
 
-    saveUsersToJSON(); // Kullanıcıları JSON dosyasına kaydet
-    alert("Kayıt başarılı! Şimdi giriş yapabilirsiniz.");
-    window.location.href = "login.html"; // Kayıt olduktan sonra otomatik olarak login sayfasına yönlendir
+    saveUsersToJSON(); // Corrected function name
+    alert("Registration successful! You can now log in.");
+    window.location.href = "login.html";
   }
 }
 
@@ -62,7 +65,7 @@ function goBack() {
   window.location.href = "homepage.html";
 }
 
-// Sayfa yüklendiğinde local storage'dan kullanıcıları yükle
+
 document.addEventListener('DOMContentLoaded', function () {
   loadUsersFromJSON();
 });
