@@ -13,6 +13,10 @@ function loadUsersFromJSON() {
   } else {
     console.log("No users found in localStorage.");
   }
+  if (Object.keys(users).length > 0) {
+    // Eğer en az bir kullanıcı varsa, currentUser'ı ilk kullanıcı olarak tanımla
+    currentUser = Object.keys(users)[0];
+  }
 }
 
 function loginUser() {

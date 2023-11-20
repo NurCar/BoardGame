@@ -5,10 +5,11 @@ let matchHistory;
 let player1;
 let player2;
 
+
 document.addEventListener('DOMContentLoaded', function () {
   loadUsersFromJSON();
-  showMatchHistory(); // Ekle
   updatePlayers();
+  updateMatchHistory();
   startGame();
 });
 
@@ -20,30 +21,26 @@ function updatePlayers() {
   const users = JSON.parse(localStorage.getItem('users')) || {};
 
   player1Select.innerHTML = "";
+  player2Select.innerHTML = "";
 
-  // player2Select'e null kontrolü ekleyelim
-  if (player2Select) {
-    player2Select.innerHTML = "";
+  // Tüm kullanıcıları listele
+  for (const user in users) {
+    const option1 = document.createElement("option");
+    option1.value = user;
+    option1.text = user;
+    player1Select.add(option1);
 
-    // Tüm kullanıcıları listele
-    for (const user in users) {
-      const option1 = document.createElement("option");
-      option1.value = user;
-      option1.text = user;
-      player1Select.add(option1);
-
-      const option2 = document.createElement("option");
-      option2.value = user;
-      option2.text = user;
-      player2Select.add(option2);
-    }
-
-    // İkinci oyuncu seçeneğinin değişiklik olayını dinle
-    player2Select.addEventListener('change', function () {
-      player2 = player2Select.value;
-      updateStatus();
-    });
+    const option2 = document.createElement("option");
+    option2.value = user;
+    option2.text = user;
+    player2Select.add(option2);
   }
+
+  // İkinci oyuncu seçeneğinin değişiklik olayını dinle
+  player2Select.addEventListener('change', function () {
+    player2 = player2Select.value;
+    updateStatus();
+  });
 
   // İlk oyuncu seçeneğinin değişiklik olayını dinle
   player1Select.addEventListener('change', function () {
@@ -53,11 +50,27 @@ function updatePlayers() {
 
   // currentUser kontrolü
   if (typeof currentUser !== 'undefined' && currentUser !== null) {
-    player1 = currentUser;
-    // player2Select varsa ve değeri null değilse güncelle
-    if (player2Select && player2Select.value !== null) {
-      player2 = player2Select.value;
+    // Eğer yeni bir kullanıcı kaydedildiyse, bu kullanıcıyı seçeneklere ekle
+    if (!users[currentUser]) {
+      const option1 = document.createElement("option");
+      option1.value = currentUser;
+      option1.text = currentUser;
+      player1Select.add(option1);
+
+      const option2 = document.createElement("option");
+      option2.value = currentUser;
+      option2.text = currentUser;
+      player2Select.add(option2);
+
+      // Kayıtlı kullanıcılara ekle
+      users[currentUser] = {
+        matchHistory: []
+      };
+      saveUsersToJSON('users');
     }
+
+    player1 = currentUser;
+    player2 = player2Select.value; // İkinci oyuncuyu seçilen değere göre güncelle
     updateStatus();
   } else {
     console.error("currentUser is not defined.");
@@ -268,25 +281,29 @@ function goBack() {
 }
 
 function updateMatchHistory() {
-  const users = JSON.parse(localStorage.getItem('users')) || {};
+  try {
+    const users = JSON.parse(localStorage.getItem('users')) || {};
 
-  const player1History = {
-    opponent: player2,
-    rounds: roundCount,
-    winner: currentPlayer
-  };
+    const player1History = {
+      opponent: player2,
+      rounds: roundCount,
+      winner: currentPlayer
+    };
 
-  const player2History = {
-    opponent: player1,
-    rounds: roundCount,
-    winner: (currentPlayer === "X") ? "O" : "X"
-  };
+    const player2History = {
+      opponent: player1,
+      rounds: roundCount,
+      winner: (currentPlayer === "X") ? "O" : "X"
+    };
 
-  users[player1].matchHistory.push(player1History);
-  users[player2].matchHistory.push(player2History);
+    users[player1].matchHistory.push(player1History);
+    users[player2].matchHistory.push(player2History);
 
-  localStorage.setItem('users', JSON.stringify(users));
-  showMatchHistory(); // Güncellendikten sonra geçmişi göster
+    localStorage.setItem('users', JSON.stringify(users));
+    showMatchHistory(); // Güncellendikten sonra geçmişi göster
+  } catch (error) {
+    console.error("LocalStorage update error:", error);
+  }
 }
 
 function showMatchHistory() {
