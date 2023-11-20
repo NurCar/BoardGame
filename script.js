@@ -14,7 +14,7 @@ function loadUsersFromJSON() {
     console.log("No users found in localStorage.");
   }
   if (Object.keys(users).length > 0) {
-    // Eğer en az bir kullanıcı varsa, currentUser'ı ilk kullanıcı olarak tanımla
+    // If there is at least one user, set currentUser as the first user
     currentUser = Object.keys(users)[0];
   }
 }
@@ -54,7 +54,7 @@ function registerUser() {
       matchHistory: []
     };
 
-    saveUsersToJSON(); // Corrected function name
+    saveUsersToJSON();
     alert("Registration successful! You can now log in.");
     window.location.href = "login.html";
   }
@@ -68,7 +68,6 @@ function logout() {
 function goBack() {
   window.location.href = "homepage.html";
 }
-
 
 document.addEventListener('DOMContentLoaded', function () {
   loadUsersFromJSON();

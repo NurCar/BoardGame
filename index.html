@@ -5,19 +5,29 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Add Bootstrap CSS link -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="styles.css">
-  <title>Tic Tac Toe Game</title>
+  <title>Board Game</title>
 </head>
 
-<body>
-  <div class="container">
-    <h1>Welcome!</h1>
-    <p>Build a Tic Tac Toe game where 2 players can play against each other.</p>
-    <div class="options">
-      <a href="login.html">Login</a>
-      <a href="register.html">Register</a>
+<body class="bg-light">
+  <div class="container mt-5">
+    <div class="jumbotron">
+      <h1 class="display-4">Welcome to Board Game!</h1>
+      <p class="lead">Build a Board game where 2 players can play against each other.</p>
+      <hr class="my-4">
+      <p class="lead">
+        <!-- Add Bootstrap button styling -->
+        <a class="btn btn-primary btn-lg" href="login.html" role="button">Login</a>
+        <a class="btn btn-success btn-lg" href="register.html" role="button">Register</a>
+      </p>
     </div>
   </div>
+  <!-- Add Bootstrap JS and Popper.js -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="script.js"></script>
 </body>
 

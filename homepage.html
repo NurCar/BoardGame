@@ -6,6 +6,60 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      /* Distribute items equally */
+      margin-top: 20px;
+    }
+
+    .options a,
+    .options button {
+      flex: 0 1 calc(30% - 10px);
+      /* Set width for each button */
+      margin: 10px;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: #fff;
+      background-color: #333;
+      border: 1px solid #333;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .options a:hover,
+    .options button:hover {
+      background-color: #555;
+    }
+
+    button {
+      margin-top: 20px;
+      /* Add margin to the "Logout" button */
+    }
+  </style>
   <title>Home</title>
 </head>
 
@@ -15,8 +69,9 @@
     <div class="options">
       <a href="game.html">Play Game</a>
       <a href="history.html">Game History</a>
-      <button onclick="logout()">Logout</button>
+      <a href="index.html">Home</a>
     </div>
+    <button onclick="logout()">Logout</button>
   </div>
   <script src="script.js"></script>
 </body>

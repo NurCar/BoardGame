@@ -7,23 +7,22 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
-  <title>3 i Rad Oyunu</title>
+  <title>Board Game</title>
 </head>
 
 <body>
   <div class="container">
     <h1>Tic Tac Toe</h1>
 
-
-    <label for="player1">Oyuncu 1:</label>
+    <label for="player1">Player 1:</label>
     <select id="player1"></select>
 
-    <label for="player2">Oyuncu 2:</label>
+    <label for="player2">Player 2:</label>
     <select id="player2"></select>
 
-    <button onclick="startGame()">Oyunu Başlat</button>
-    <button onclick="goBack()">Ana Sayfa</button>
-    <button onclick="goToMatchHistory()">Maç Geçmişi</button>
+    <button onclick="startGame()">Start Game</button>
+    <button onclick="goBack()">Home</button>
+    <button onclick="goToMatchHistory()">Match History</button>
     <div id="status"></div>
     <div id="board" class="board"></div>
   </div>

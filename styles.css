@@ -13,9 +13,8 @@ html {
   background-color: #333;
   flex-direction: column;
   margin-top: 0px;
-  /* Minskar avståndet uppåt */
   margin-bottom: 0px;
-  /* Tar bort nedre marginal */
+
 }
 
 .title {
@@ -27,9 +26,9 @@ html {
   text-shadow: 2px 2px 4px rgba(3, 3, 3, 3);
   text-transform: uppercase;
   margin-bottom: 0px;
-  /* Tar bort nedre marginal */
+
   padding: 2px 4px;
-  /* Minskar padding för att minska avstånd */
+
 }
 
 .board {
@@ -45,7 +44,7 @@ html {
   padding: 10px;
   box-sizing: border-box;
   margin-top: 0px;
-  /* Minskar avståndet uppåt */
+
 }
 
 .cell {
@@ -109,10 +108,12 @@ html {
 }
 
 .container {
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 400px;
+  margin: 50px auto;
   padding: 20px;
-  text-align: center;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -144,4 +145,52 @@ button:hover {
 
 .history-list li {
   margin: 10px 0;
+}
+
+form {
+  max-width: 300px;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #555;
+}
+
+#player1,
+#player2 {
+  margin-bottom: 10px;
+}
+
+#status {
+  margin-top: 20px;
+  margin-bottom: 20px;
+
 }

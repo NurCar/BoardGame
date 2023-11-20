@@ -6,13 +6,19 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="history.css"> <!-- Yeni stil dosyasını ekle -->
+  <link rel="stylesheet" href="history.css">
   <title>Game History</title>
 </head>
 
 <body>
   <div class="history-container">
     <h1 class="history-title">Game History</h1>
+
+    <label for="player1">Player 1:</label>
+    <select id="player1"></select>
+
+    <label for="player2">Player 2:</label>
+    <select id="player2"></select>
 
     <table id="historyTable" class="history-table">
       <thead>
@@ -24,18 +30,15 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Maç geçmişi burada listelenecek -->
       </tbody>
     </table>
 
-    <button class="history-button" onclick="goBack()">Ana Sayfa</button>
+    <button class="history-button" onclick="goBack()">Home</button>
   </div>
-
 
   <script src="game.js"></script>
   <script src="script.js"></script>
   <script>
-    // Sayfa yüklendiğinde maç geçmişini göster
     document.addEventListener('DOMContentLoaded', function () {
       showMatchHistory();
     });
