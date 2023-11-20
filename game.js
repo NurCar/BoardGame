@@ -9,7 +9,7 @@ let player2;
 document.addEventListener('DOMContentLoaded', function () {
   loadUsersFromJSON();
   updatePlayers();
-  updateMatchHistory();
+  updateMatchHistory()
   startGame();
 });
 
@@ -74,6 +74,16 @@ function updatePlayers() {
     updateStatus();
   } else {
     console.error("currentUser is not defined.");
+  }
+}
+
+function getDisplayName(symbol) {
+  // Oyuncu simgesini kullanıcı adına dönüştür
+  if (typeof currentUser !== 'undefined' && currentUser !== null) {
+    return symbol === "X" ? player1 : player2;
+  } else {
+    console.error("currentUser is not defined.");
+    return "";
   }
 }
 
@@ -296,13 +306,27 @@ function updateMatchHistory() {
       winner: (currentPlayer === "X") ? "O" : "X"
     };
 
+    // Temizleme işlemi
+    cleanInvalidEntries(users);
+
     users[player1].matchHistory.push(player1History);
     users[player2].matchHistory.push(player2History);
 
     localStorage.setItem('users', JSON.stringify(users));
-    showMatchHistory(); // Güncellendikten sonra geçmişi göster
+    showMatchHistory();
   } catch (error) {
     console.error("LocalStorage update error:", error);
+  }
+}
+
+function cleanInvalidEntries(users) {
+  for (const playerName in users) {
+    const player = users[playerName];
+
+    if (player.matchHistory) {
+      // Geçersiz öğeleri filtrele
+      player.matchHistory = player.matchHistory.filter(match => match && match.opponent && match.rounds && match.winner);
+    }
   }
 }
 
@@ -311,6 +335,8 @@ function showMatchHistory() {
 
   if (!historyTable) {
     console.error("historyTable not found on the page.");
+    console.error("Document body content:", document.body.innerHTML);
+    console.error("localStorage content:", localStorage.getItem('users'));
     return;
   }
 
